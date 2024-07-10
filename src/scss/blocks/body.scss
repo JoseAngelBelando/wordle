@@ -1,7 +1,59 @@
-html {
-  scroll-behavior: smooth;
-}
 body {
-  background-color: #111;
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f8f8;
+}
+
+.main {
+  text-align: center;
+}
+
+.title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.game-board {
+  display: grid;
+  gap: 10px;
+}
+
+.game-board__row {
+  display: flex;
+  gap: 5px;
+}
+
+.letter {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+}
+
+.input {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 1em;
+}
+
+.pop-up {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  display: none;
+}
+
+.pop-up--show {
+  display: block;
 }

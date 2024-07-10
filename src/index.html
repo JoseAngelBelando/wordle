@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- PON UN FAVICON!!! -->
-    <link rel="icon" type="image/svg+xml" href="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- CAMBIA EL TITLE!!! -->
-    <title>Vite Template</title>
-  </head>
-  <body>
-    <script type="module" src="./js/index.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Clone</title>
+    <link rel="stylesheet" href="./scss/styles.scss">
+</head>
+<body>
+    <main class="main">
+        <h1 class="title">WORDLE</h1>
+        <div id="game-board" class="game-board"></div>
+        <form id="user-word-form">
+            <input type="text" name="word" class="input" placeholder="Type your solution" maxlength="5">
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+    <div id="modal" class="modal"></div>
+    <div id="pop-up" class="pop-up"></div>
+    <script src="./js/index.js"></script>
+</body>
 </html>
+
