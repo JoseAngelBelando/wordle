@@ -1,108 +1,90 @@
 // El styles lo importamos aquí, ya se carga después al compilar todo
 import '../scss/styles.scss';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const words = [
-    'alaba',
-    'bollo',
-    'canal',
-    'dados',
-    'estar',
-    'farol',
-    'gatos',
-    'index',
-    'jaula',
-    'labio',
-    'moral',
-    'nacer',
-    'oasis',
-    'piano',
-    'queja',
-    'rampa',
-    'salta',
-    'trama',
-    'uvula',
-    'valla',
-    'yermo',
-    'zorro'
-  ];
-  const maxAttempts = 6;
-  const gameBoard = document.getElementById('game-board');
-  const userWordForm = document.getElementById('user-word-form');
-  const popUp = document.getElementById('pop-up');
-  let attempts = 0;
-  let targetWord = words[Math.floor(Math.random() * words.length)];
+const ALL_WORDS = ['cosa'];
 
-  const createBoard = () => {
-    gameBoard.innerHTML = ''; // limpiar
-    for (let i = 0; i < maxAttempts; i++) {
-      const row = document.createElement('div');
-      row.classList.add('game-board__row');
-      for (let j = 0; j < targetWord.length; j++) {
-        const letter = document.createElement('span');
-        letter.classList.add('letter');
-        row.appendChild(letter);
-      }
-      gameBoard.appendChild(row);
+const NUMBER_OF_TRIES = 5;
+
+const gameBoardElement = document.getElementById('game-board');
+const userWordFormElement = document.getElementById('user-word-form');
+
+let secretWord;
+let currentRow = 0;
+
+const chooseSecretWord = () => {
+  const randomNumber = Math.floor(Math.random() * ALL_WORDS.length);
+  secretWord = ALL_WORDS[randomNumber];
+  // console.log(secretWord);
+};
+
+const createGameBoard = () => {
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < NUMBER_OF_TRIES; i++) {
+    const newRow = document.createElement('div');
+    newRow.classList.add('game-board__row');
+    for (let j = 0; j < secretWord.length; j++) {
+      const newLetterContainer = document.createElement('span');
+      newLetterContainer.classList.add('letter');
+      newRow.append(newLetterContainer);
     }
-  };
+    fragment.append(newRow);
+  }
 
-  const updateBoard = word => {
-    const row = gameBoard.children[attempts];
-    const targetArray = targetWord.split('');
-    const wordArray = word.split('');
+  gameBoardElement.append(fragment);
+};
 
-    for (let i = 0; i < wordArray.length; i++) {
-      const letter = row.children[i];
-      letter.textContent = wordArray[i];
-      if (wordArray[i] === targetArray[i]) {
-        letter.classList.add('letter--correct');
-        targetArray[i] = null;
-      }
+const startGame = () => {
+  chooseSecretWord();
+  createGameBoard();
+};
+
+const printLetter = (letter, position, className) => {
+  const letterBox = gameBoardElement.children[currentRow].children[position];
+  if (!letterBox.classList.contains('letter--correct')) {
+    letterBox.classList.add(className);
+  }
+  letterBox.textContent = letter;
+};
+
+const checkRow = word => {
+  let className;
+  let wordToCheck = secretWord;
+
+  for (let i = 0; i < word.length; i++) {
+    const letter = word[i];
+    if (letter === secretWord[i]) {
+      className = 'letter--correct';
+      wordToCheck = wordToCheck.replace(letter, '-');
+      console.log(wordToCheck);
+      printLetter(letter, i, className);
     }
-    for (let i = 0; i < wordArray.length; i++) {
-      const letter = row.children[i];
-      if (letter.classList.contains('letter--correct')) continue;
-      if (targetArray.includes(wordArray[i])) {
-        letter.classList.add('letter--present');
-        targetArray[targetArray.indexOf(wordArray[i])] = null;
-      } else {
-        letter.classList.add('letter--incorrect');
-      }
-    }
-    attempts++;
-  };
+  }
 
-  const showPopUp = message => {
-    popUp.textContent = message;
-    popUp.classList.add('pop-up--show');
-    setTimeout(() => popUp.classList.remove('pop-up--show'), 2000);
-  };
-
-  const checkGameOver = word => {
-    if (word === targetWord) {
-      showPopUp('Congratulations! You guessed the word!');
-      return true;
-    } else if (attempts === maxAttempts) {
-      showPopUp(`Game over! The word was ${targetWord}`);
-      return true;
+  for (let i = 0; i < word.length; i++) {
+    const letter = word[i];
+    if (wordToCheck.includes(letter)) {
+      className = 'letter--present';
+      wordToCheck = wordToCheck.replace(letter, '-');
+    } else {
+      className = 'letter--incorrect';
     }
-    return false;
-  };
+    printLetter(letter, i, className);
+  }
 
-  userWordForm.addEventListener('submit', event => {
-    event.preventDefault();
-    const word = event.target.word.value.toLowerCase();
-    if (word.length !== 5) {
-      showPopUp('The word must be 5 letters long');
-      return;
-    }
-    updateBoard(word);
-    if (checkGameOver(word)) {
-      userWordForm.removeEventListener('submit', arguments.callee); // Disable further inputs
-    }
-    event.target.reset();
-  });
+  currentRow++;
+};
 
-  createBoard();
+startGame();
+
+userWordFormElement.addEventListener('submit', event => {
+  event.preventDefault();
+  const userWord = event.target.word.value;
+  if (secretWord.length !== userWord.length) {
+    console.log(`La palabra tiene que tener ${secretWord.length} letras.`);
+    return;
+  }
+
+  checkRow(userWord);
+  event.target.reset();
 });
