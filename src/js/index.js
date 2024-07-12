@@ -1,7 +1,7 @@
 // El styles lo importamos aquí, ya se carga después al compilar todo
 import '../scss/styles.scss';
 
-const ALL_WORDS = ['cosa'];
+const ALL_WORDS = ['cosa', 'mariposa', 'bicicleta'];
 
 const NUMBER_OF_TRIES = 5;
 
@@ -10,7 +10,7 @@ const userWordFormElement = document.getElementById('user-word-form');
 
 let secretWord;
 let currentRow = 0;
-
+// generamos una palabra secreta
 const chooseSecretWord = () => {
   const randomNumber = Math.floor(Math.random() * ALL_WORDS.length);
   secretWord = ALL_WORDS[randomNumber];
@@ -19,10 +19,11 @@ const chooseSecretWord = () => {
 
 const createGameBoard = () => {
   const fragment = document.createDocumentFragment();
-
+  // bucle para generar columnas(se generan tastos div como intentos)
   for (let i = 0; i < NUMBER_OF_TRIES; i++) {
     const newRow = document.createElement('div');
     newRow.classList.add('game-board__row');
+    // hacemos otro bucle para generar tantos span(cuadrados para cada letra de la plabra) como letras tenga la palabra secreta.
     for (let j = 0; j < secretWord.length; j++) {
       const newLetterContainer = document.createElement('span');
       newLetterContainer.classList.add('letter');
